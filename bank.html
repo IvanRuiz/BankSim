@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <script>
+        var arrival_time = [3.2, 10.9, 13.2, 14.8, 17.7, 19.8, 21.5, 26.3, 32.1, 36.6];
+
+        var service_time = [3.8, 3.5, 4.2, 3.1, 2.4, 4.3, 2.7, 2.1, 2.5, 3.4];
+
+        var event_time = 0.0;
+        var customer_number = 0;
+        var event_type;
+        var number_in_queue = [];
+        var number_in_bank = 0;
+        var teller_status;
+        var teller_idle_time = 0;
+        var idle_time = 0;
+        var time_busy;
+        var departure_time = [];
+        var job_time;
+        var departure;
+        var current_customer_number;
+
+
+        function simulation() {
+            timer();
+        }
+
+        function timer() {
+
+            if (event_time < 40.1) {
+
+                setTimeout(timer, 2);
+
+                timeStep();
+
+                event_time += 0.1;
+
+            }
+        }
+
+        function timeStep() {
+
+            // Start SIM
+
+            if (event_time == 0) {
+                event_type = "Start";
+                teller_status = "Idle";
+            }
+
+            current_time = event_time.toFixed(1);
+
+            if (customer_number != arrival_time.length) {
+                customer_arrival = arrival_time[customer_number].toString();
+            } else {
+                customer_arrival = arrival_time[arrival_time.length - 1].toString();
+            }
+
+            time_busy = service_time[customer_number] + event_time;
+            job_time = time_busy.toFixed(1);
+
+
+            if (current_time == customer_arrival) {
+                number_in_queue.push(customer_number);
+                console.log(number_in_queue);
+                customer_number++;
+                number_in_bank++;
+                event_type = "Arrival";
+                current_customer_number = customer_number;
+                departure_time.push(job_time);
+                console.log(departure_time);
+
+            } else {
+                event_type = "-------";
+                current_customer_number = "/";
+            }
+
+            if (number_in_queue.length > 0) {
+
+                teller_status = "Busy";
+
+                departure = departure_time[0].toString();
+
+                if (current_time == departure) {
+                    current_customer_number=number_in_queue[0]+1;
+                    number_in_queue.shift();
+                    departure_time.shift();
+                    console.log(number_in_queue);
+                    console.log(departure_time);
+                    event_type = "Departure";
+                    number_in_bank--;
+
+
+                    if (number_in_queue.length == 0) {
+
+                        teller_status = "Idle";
+
+                    }
+
+                }
+
+
+            } else {
+
+                teller_status = "Idle";
+
+            }
+
+
+
+            //////////////
+            print_timeStep();
+
+        } ///TIMESTEP-END
+
+         // Console Visualization 
+
+        function print_timeStep() {
+            console.log(event_time.toFixed(1) + "|" + current_customer_number + "|" + event_type + "|" + number_in_queue.length + "|" + number_in_bank + "|" + teller_status + "|"/*+teller_idle_time*/);
+        }
+
+        function cola() {
+
+            var p = [];
+
+            console.log(p);
+
+            p.push(1);
+            p.push(2);
+            p.push(3);
+
+            console.log(p);
+
+            p.shift();
+
+            console.log(p);
+            console.log(p[0]);
+
+
+        }
+    </script>
+
+</body>
+
+</html>
