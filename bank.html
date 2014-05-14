@@ -83,7 +83,7 @@
                 departure = departure_time[0].toString();
 
                 if (current_time == departure) {
-                    current_customer_number=number_in_queue[0]+1;
+                    current_customer_number = number_in_queue[0] + 1;
                     number_in_queue.shift();
                     departure_time.shift();
                     console.log(number_in_queue);
@@ -117,27 +117,7 @@
          // Console Visualization 
 
         function print_timeStep() {
-            console.log(event_time.toFixed(1) + "|" + current_customer_number + "|" + event_type + "|" + number_in_queue.length + "|" + number_in_bank + "|" + teller_status + "|"/*+teller_idle_time*/);
-        }
-
-        function cola() {
-
-            var p = [];
-
-            console.log(p);
-
-            p.push(1);
-            p.push(2);
-            p.push(3);
-
-            console.log(p);
-
-            p.shift();
-
-            console.log(p);
-            console.log(p[0]);
-
-
+            console.log(event_time.toFixed(1) + "|" + current_customer_number + "|" + event_type + "|" + number_in_queue.length + "|" + number_in_bank + "|" + teller_status + "|" /*+teller_idle_time*/ );
         }
     </script>
 
