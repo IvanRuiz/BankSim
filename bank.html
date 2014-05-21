@@ -12,21 +12,29 @@
         var customer_number = 0;
         var event_type;
         var number_in_queue = [];
+        var time_queue = [];
         var number_in_bank = 0;
         var teller_status;
-        var teller_idle_time = 0;
-        var idle_time = 0;
         var time_busy;
         var departure_time = [];
         var job_time;
         var departure;
         var current_customer_number;
+        var stop = [];
+        var start_service;
+        var nq;
 
-
-        function simulation() {
-            timer();
+        var indx;
+        for (indx = 0; indx < service_time.length; indx++) {
+            stop[indx] = 0;
         }
 
+        ///SIMULATION-START
+        function simulation() {
+            timer();
+        }///SIMULATION-END
+
+        ///TIMER-START
         function timer() {
 
             if (event_time < 40.1) {
@@ -38,11 +46,10 @@
                 event_time += 0.1;
 
             }
-        }
+        }///TIMER-END
 
+        ///TIMESTEP-START
         function timeStep() {
-
-            // Start SIM
 
             if (event_time == 0) {
                 event_type = "Start";
@@ -57,19 +64,38 @@
                 customer_arrival = arrival_time[arrival_time.length - 1].toString();
             }
 
-            time_busy = service_time[customer_number] + event_time;
-            job_time = time_busy.toFixed(1);
+            var i;
+            for (i = 0; i < time_queue.length; i++) {
 
+                if (stop[i] == 0) {
+                    time_queue[i] += 0.1;
+                }
+
+            }
 
             if (current_time == customer_arrival) {
+
                 number_in_queue.push(customer_number);
-                console.log(number_in_queue);
+                time_queue[customer_number] = 0;
+
+                if (customer_number == 0) {
+                    time_busy = service_time[customer_number] + event_time;
+                } else {
+                    if (customer_number >= 1 && stop[customer_number - 1] == 1) {
+                        time_busy = service_time[customer_number] + event_time;
+                        start_service = time_busy;
+                    } else {
+                        time_busy = start_service + service_time[customer_number];
+                        start_service = time_busy;
+                    }
+                }
+                
+                job_time = time_busy.toFixed(1);
+                departure_time.push(job_time);
                 customer_number++;
                 number_in_bank++;
                 event_type = "Arrival";
                 current_customer_number = customer_number;
-                departure_time.push(job_time);
-                console.log(departure_time);
 
             } else {
                 event_type = "-------";
@@ -84,40 +110,34 @@
 
                 if (current_time == departure) {
                     current_customer_number = number_in_queue[0] + 1;
-                    number_in_queue.shift();
+                    stop[number_in_queue.shift()] = 1;
                     departure_time.shift();
-                    console.log(number_in_queue);
-                    console.log(departure_time);
                     event_type = "Departure";
                     number_in_bank--;
 
-
                     if (number_in_queue.length == 0) {
-
                         teller_status = "Idle";
-
                     }
-
                 }
 
-
             } else {
-
                 teller_status = "Idle";
+            }
+            
+            nq = number_in_queue.length - 1;
 
+            if (nq < 0) {
+                nq = 0
             }
 
-
-
-            //////////////
             print_timeStep();
 
         } ///TIMESTEP-END
 
-         // Console Visualization 
-
+        ///CONSOLE VISUALIZATION
         function print_timeStep() {
-            console.log(event_time.toFixed(1) + "|" + current_customer_number + "|" + event_type + "|" + number_in_queue.length + "|" + number_in_bank + "|" + teller_status + "|" /*+teller_idle_time*/ );
+
+            console.log(event_time.toFixed(1) + "|" + current_customer_number + "|" + event_type + "|" + nq + "|" + number_in_bank + "|" + teller_status + "|");
         }
     </script>
 
